@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pit Lane English</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800;900&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* VOICE: calm, warm coach for a 15-year-old racer; short Chinese lines, English content.
+   IDEA: a towel on the beach between race weekends: sand, sea and a coral towel.
+   PICTURE: flat top-down beach scene with a coral towel and a racing helmet.
+   COLOUR and TYPE: sand ground, coral accent, teal sea; Nunito rounded + Noto Sans SC.
+   LAYOUT: one phone column, max 560px, big tap targets, one task per screen. */
+:root{color-scheme:light dark;
+--bg:light-dark(#F2E6D5,#10282A);--card:light-dark(#FBF6EE,#1A3537);--card2:light-dark(#F6ECDF,#21403F);
+--ink:light-dark(#2B2622,#F3E9DC);--mute:light-dark(#6B6158,#BFB3A6);--line:light-dark(#E4D5C2,#2E4D4E);
+--coral:light-dark(#C24E2E,#EE8A68);--onc:light-dark(#FFFFFF,#1B100C);--coral-s:light-dark(#F8D9CC,#4A2C24);
+--teal:light-dark(#22767A,#6CC3C3);--teal-s:light-dark(#D5ECEA,#1D4A4B);--sun:light-dark(#9A6A12,#F2C266);--sun-s:light-dark(#F7E7C2,#4A3C1E)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 Nunito,"Noto Sans SC",system-ui,sans-serif;overflow-x:clip}
+#app{max-width:560px;margin:0 auto;padding-bottom:40px}
+.pad{padding:0 18px}
+h1{font-size:32px;line-height:1.1;margin:0;font-weight:900;text-wrap:balance}
+h2{font-size:22px;line-height:1.2;margin:0;font-weight:800}
+p{margin:0}
+.mute{color:var(--mute)}.sm{font-size:14px}
+.stack{display:flex;flex-direction:column;gap:12px}
+.row{display:flex;gap:10px;align-items:center}
+.card{background:var(--card);border-radius:20px;padding:18px}
+.hero{position:relative;height:200px;overflow:hidden}
+.hero svg{position:absolute;inset:0;width:100%;height:100%}
+.nav{position:absolute;left:0;right:0;top:14px;display:flex;gap:8px;padding:0 18px;flex-wrap:wrap}
+.nav button{background:rgba(251,246,238,.9);border:0;color:#2B2622;font:900 14px Nunito,"Noto Sans SC",sans-serif;letter-spacing:.04em;text-transform:uppercase;padding:6px 14px;min-height:40px;border-radius:999px;cursor:pointer}
+.nav button.on{background:#C24E2E;color:#fff}
+.top{display:flex;align-items:center;gap:12px;padding:18px}
+.iconbtn{width:44px;height:44px;border-radius:14px;border:0;background:var(--card);color:var(--ink);display:grid;place-items:center;cursor:pointer;flex:none}
+.btn{min-height:52px;border-radius:16px;border:0;font:800 16px Nunito,"Noto Sans SC",sans-serif;padding:0 18px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;width:100%}
+.pri{background:var(--coral);color:var(--onc)}
+.sec{background:var(--card);color:var(--ink);border:2px solid var(--line)}
+.teal{background:var(--teal);color:var(--onc)}
+.btn:disabled{opacity:.45;cursor:default}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;font-size:13px;font-weight:800;background:var(--card2)}
+.chip.c{background:var(--coral-s);color:var(--coral)}.chip.t{background:var(--teal-s);color:var(--teal)}.chip.s{background:var(--sun-s);color:var(--sun)}
+.step{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:16px;background:var(--card);border:0;width:100%;text-align:left;color:var(--ink);font:inherit;cursor:pointer;min-height:60px}
+.step.now{outline:2px solid var(--coral)}
+.dot{width:34px;height:34px;border-radius:12px;display:grid;place-items:center;flex:none;background:var(--card2);font-weight:900;font-size:14px}
+.dot.ok{background:var(--teal);color:var(--onc)}.dot.now{background:var(--coral);color:var(--onc)}
+.bar{height:10px;border-radius:5px;background:var(--card2);overflow:hidden}.bar>i{display:block;height:100%;border-radius:5px;background:var(--teal)}
+.opt{display:flex;align-items:center;gap:12px;width:100%;min-height:56px;padding:10px 14px;border-radius:16px;border:2px solid var(--line);background:var(--card);color:var(--ink);font:600 17px Nunito,"Noto Sans SC",sans-serif;text-align:left;cursor:pointer}
+.opt .k{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:var(--card2);font-weight:900;font-size:14px;flex:none}
+.opt.sel{border-color:var(--coral);background:var(--coral-s)}.opt.sel .k{background:var(--coral);color:var(--onc)}
+.opt.ok{border-color:var(--teal);background:var(--teal-s)}.opt.ok .k{background:var(--teal);color:var(--onc)}
+.opt.bad{border-color:var(--coral);background:var(--coral-s)}.opt.bad .k{background:var(--coral);color:var(--onc)}
+.seg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.seg button{min-height:44px;border-radius:12px;border:2px solid var(--line);background:transparent;color:var(--ink);font:700 15px Nunito,sans-serif;cursor:pointer}
+.seg button.on{border-color:var(--coral);background:var(--coral-s);color:var(--coral)}
+.line{padding:8px 10px;border-radius:12px;transition:background .2s}
+.line.cur{background:var(--sun-s)}
+.who{font-weight:900}.who.rm{color:var(--coral)}.who.o{color:var(--teal)}
+.blur .txt{filter:blur(6px);user-select:none}
+.big{font-size:22px;line-height:1.5;font-weight:800}
+.w-ok{color:var(--teal)}.w-bad{color:var(--coral);text-decoration:underline wavy;text-underline-offset:5px}
+.tip{background:var(--sun-s);border-radius:14px;padding:10px 12px;font-size:15px}
+.mic{width:88px;height:88px;border-radius:50%;border:0;background:var(--coral);color:var(--onc);display:grid;place-items:center;cursor:pointer;margin:0 auto}
+.mic.on{background:var(--teal);animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.07)}}
+@media (prefers-reduced-motion:reduce){.mic.on{animation:none}.line{transition:none}}
+.grid5{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.qdot{min-height:40px;border-radius:10px;border:0;background:var(--card);color:var(--ink);font:800 14px Nunito,sans-serif;cursor:pointer}
+.qdot.a{background:var(--teal-s);color:var(--teal)}.qdot.cur{outline:2px solid var(--coral)}
+textarea{width:100%;min-height:110px;border-radius:14px;border:2px solid var(--line);background:var(--card);color:var(--ink);font:16px/1.5 Nunito,"Noto Sans SC",sans-serif;padding:12px}
+table{border-collapse:collapse;width:100%}td{padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:top;font-size:15px}
+.bubble{border-radius:18px;padding:12px 14px}
+.ring{width:96px;height:96px;flex:none}
+.lock{opacity:.55}
+.note{font-size:13px;color:var(--mute)}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+{
+/* ---------- CONTENT ---------- */
+const DAYS = [
+{ n:1, type:"Daily life", title:"Meet a new friend", other:"Leo",
+  vocab:[
+    {w:"paddock",z:"the area where teams keep their karts and tools",e:"Let's meet in the paddock after lunch."},
+    {w:"qualifying",z:"the session that decides your starting position",e:"Qualifying is at 10 a.m."},
+    {w:"mechanic",z:"a person who fixes and prepares your kart",e:"My mechanic checks my kart before every race."},
+    {w:"nervous",z:"a little scared or worried",e:"I'm a little nervous today."},
+    {w:"tight",z:"(a corner) very sharp, you must slow down a lot",e:"This corner is very tight."},
+    {w:"friendly",z:"kind and nice to other people",e:"Everyone here is friendly."},
+    {w:"relaxed",z:"calm, not worried",e:"I feel relaxed after a good lunch."},
+    {w:"weekday",z:"Monday, Tuesday, Wednesday, Thursday or Friday",e:"My weekdays are very busy."}],
+  listen:{lines:[
+    ["Leo","Hi! Are you new here? I'm Leo."],
+    ["RM","Hi Leo, I'm RM. I'm from Kuala Lumpur. This is my second race at this track."],
+    ["Leo","Nice! Which kart is yours?"],
+    ["RM","The blue one, number twenty-seven. My team is small, but they are really friendly."],
+    ["Leo","Cool. Are you nervous about the race?"],
+    ["RM","A little. The track is very fast, and the corners are tight. What about you?"],
+    ["Leo","I'm OK. My brother is my mechanic, so I feel relaxed. Are you a student?"],
+    ["RM","Yes, I am. I'm in high school. I'm in the school choir too, so my weekdays are very busy."],
+    ["Leo","Wow, racing and singing! What is your favourite food after a race?"],
+    ["RM","Nasi lemak, of course! What about you?"],
+    ["Leo","Pizza. Hey, there is a café near the paddock. Are you free after qualifying?"],
+    ["RM","Yes! Let's go together."]],
+   qs:[
+    {q:"Where is RM from?",o:["Kuala Lumpur","Penang","Singapore","Ipoh"],a:0},
+    {q:"Who is Leo's mechanic?",o:["His father","His brother","His friend","His coach"],a:1},
+    {q:"Why are RM's weekdays busy?",o:["She works at a café","She goes to school and sings in the choir","She trains at the gym every day","She fixes karts"],a:1}]},
+  speak:{topic:"Introduce myself",parts:[
+    ["RM","Hi, my name is RM. I am fifteen years old, and I am from Kuala Lumpur, Malaysia. I am a high school student, and I am also a kart driver."],
+    ["RM","Racing is a big part of my life. On race weekends, I am at the track from early morning. My team is small, but everyone is friendly and hard-working. My mechanic is very important to me, because he prepares my kart before every session."],
+    ["RM","When I am not racing, I sing in my school choir. Our choir is very good, and we sometimes join international competitions. Singing and racing are very different, but both of them need practice and focus."],
+    ["RM","My weekdays are busy. I have classes in the day and homework at night. It is not easy, but I am happy because I love what I do."],
+    ["RM","My favourite food is nasi lemak, and my favourite place to relax is the beach. My goal this year is to improve my English, so I can talk to drivers and reporters from other countries. Thank you for listening!"]]},
+  grammar:{title:"am / is / are",
+    intro:"In some languages, you can say \"The track very fast\" with no verb. In English, you always need am, is or are. Without it, the sentence is not complete.",
+    rules:[["I","am","I am nervous. = I'm nervous."],["he / she / it\none person or one thing","is","My brother is my mechanic.\nThe track is fast."],["you / we / they\nmany people or many things","are","You are fast.\nThe corners are tight."]],
+    traps:[["The track very fast.","The track is very fast.","Don't forget is."],["Leo and I am friends.","Leo and I are friends.","Leo and I = we, so use are."],["Everyone are friendly.","Everyone is friendly.","Everyone is singular, so use is."],["There is twenty karts.","There are twenty karts.","Many karts, so use there are."]],
+    forms:"Questions: put am / is / are first → Are you free? Is she your friend?\nNegative: add not → I'm not / isn't / aren't",
+    tip:"How to answer: first find the subject (who or what?), then choose am, is or are."},
+  quiz:[
+    {c:"Grammar",q:"I ___ nervous before every race.",o:["am","is","are","be"],a:0,y:"The subject is I, so we always use am (I'm)."},
+    {c:"Grammar",q:"My brother ___ my mechanic.",o:["am","is","are","be"],a:1,y:"My brother is one person (he), so we use is."},
+    {c:"Grammar",q:"The corners at this track ___ very tight.",o:["is","am","are","be"],a:2,y:"The subject is corners (many corners, with -s), not track. So we use are."},
+    {c:"Grammar",q:"Leo and I ___ good friends now.",o:["am","is","are","be"],a:2,y:"Leo and I = two people = we, so we use are. Don't use am just because you see I."},
+    {c:"Grammar",q:"___ you free after qualifying?",o:["Is","Am","Are","Be"],a:2,y:"You always goes with are. In a question, Are comes first."},
+    {c:"Grammar",q:"There ___ a café near the paddock.",o:["is","are","am","be"],a:0,y:"A café is only one, so we say There is."},
+    {c:"Grammar",q:"There ___ twenty karts in my race.",o:["is","are","am","be"],a:1,y:"Twenty karts are many, so we say There are."},
+    {c:"Grammar",q:"Which sentence is correct?",o:["The track very fast.","The track is very fast.","The track are very fast.","The track am very fast."],a:1,y:"English always needs a be verb here. The track is one thing, so we use is."},
+    {c:"Grammar",q:"My mum ___ not at the track today. She ___ at home.",o:["is / is","are / is","am / are","is / are"],a:0,y:"My mum = she, so both blanks use is."},
+    {c:"Grammar",q:"Everyone in my team ___ friendly.",o:["are","is","am","be"],a:1,y:"Everyone means many people, but in English it is singular. So we use is. This is a common IELTS trap."},
+    {c:"Vocabulary",q:"The area where teams keep their karts and tools is the ___.",o:["podium","paddock","grandstand","finish line"],a:1,y:"Paddock = where teams keep their karts and tools. The podium is for the top three. The grandstand is where fans sit."},
+    {c:"Vocabulary",q:"The session that decides your starting position is ___.",o:["practice","qualifying","the final","warm-up"],a:1,y:"Qualifying decides where you start the race."},
+    {c:"Vocabulary",q:"I feel ___ before the race. My hands are shaking.",o:["relaxed","nervous","bored","hungry"],a:1,y:"Shaking hands = nervous. Relaxed means the opposite."},
+    {c:"Vocabulary",q:"A person who fixes and prepares your kart is a ___.",o:["marshal","mechanic","sponsor","driver"],a:1,y:"A mechanic fixes your kart. A marshal waves the flags. A sponsor gives money or support."},
+    {c:"Vocabulary",q:"Monday to Friday are ___.",o:["weekends","weekdays","holidays","birthdays"],a:1,y:"Weekdays = Monday to Friday. The weekend = Saturday and Sunday."},
+    {c:"Vocabulary",q:"Leo is very ___. He always smiles and helps new drivers.",o:["friendly","lazy","angry","quiet"],a:0,y:"He smiles and helps people, so he is friendly."},
+    {c:"Spelling",q:"Choose the correct spelling: a person you like and spend time with.",o:["freind","friend","frend","friand"],a:1,y:"f-r-i-e-n-d: i comes before e. Tip: a friend is with you to the END (fri-END)."},
+    {c:"Spelling",q:"Choose the correct spelling: the day after Tuesday.",o:["Wensday","Wednesday","Wednsday","Wedensday"],a:1,y:"Wed-nes-day. We don't say the first d, but we must write it."},
+    {c:"Spelling",q:"Choose the correct spelling: a little scared or worried.",o:["nervus","nervous","nervouse","nerveous"],a:1,y:"nerv + ous. Same ending: famous, dangerous."},
+    {c:"Spelling",q:"Choose the correct spelling: a person who fixes karts.",o:["mechanik","mekanic","mechanic","machanic"],a:2,y:"Here ch sounds like k: me-chan-ic."},
+    {c:"Spelling",q:"Choose the correct spelling: \"I was late ___ of the traffic.\"",o:["becuase","because","becouse","bacause"],a:1,y:"be-cau-se. Tip: Big Elephants Can Always Understand Small Elephants."},
+    {c:"Speaking",q:"New friend: \"Hi! I'm Leo. Are you new here?\" What is the best reply?",o:["Yes, I am. I'm RM. Nice to meet you!","Yes, I is new.","No, thank you.","I'm fine, and you?"],a:0,y:"Answer Are you...? with Yes, I am / No, I'm not. Then say your name."},
+    {c:"Speaking",q:"Friend: \"What's your favourite food?\" What is the best reply?",o:["Yes, I do.","Nasi lemak! I love it.","I'm from KL.","It's at three o'clock."],a:1,y:"What asks for a thing, so say the name of the food."},
+    {c:"Speaking",q:"Friend: \"Are you free after school today?\" You are busy. What is the best reply?",o:["Yes, I am busy.","Sorry, I'm busy. I have choir practice.","I'm 15.","It's very fast."],a:1,y:"Free = not busy. If you are busy, say Sorry, I'm busy + the reason. It is more polite."},
+    {c:"Speaking",q:"Friend: \"How are you?\" What is the best reply?",o:["I'm 15 years old.","I'm good, thanks. How about you?","I'm from Malaysia.","Yes, I am."],a:1,y:"How are you? asks how you feel. Answer, then ask them back."}],
+  talk:{role:"Leo (new friend)",qs:[
+    {q:"Hi! I'm Leo. Where are you from?",m:"Hi Leo, I'm RM. I'm from Kuala Lumpur, Malaysia."},
+    {q:"What do you do when you are not racing?",m:"I'm a high school student. I'm also in the school choir, so I sing a lot."},
+    {q:"What is your favourite food?",m:"My favourite food is nasi lemak. It is spicy and really tasty!"}]}
+},
+{ n:2, type:"Racing", title:"Weekend chat and race interview", other:"Leo",
+  vocab:[
+    {w:"podium",z:"the place where the top three drivers stand after the race",e:"It was my first podium."},
+    {w:"grip",z:"how well the tyres hold the track",e:"The grip was low in the rain."},
+    {w:"overtake",z:"to pass the car or kart in front of you",e:"I overtook two drivers."},
+    {w:"brake",z:"to slow down; also the pedal you press to slow down",e:"I braked late into Turn 1."},
+    {w:"straight",z:"a long part of the track with no corners",e:"He was fast on the straight."},
+    {w:"corner",z:"a place where the track turns",e:"Be careful in the corners."},
+    {w:"improve",z:"to make something better",e:"I want to improve my starts."},
+    {w:"supporter",z:"a person who helps you and cheers for you",e:"Thank you to all my supporters!"}],
+  listen:{lines:[
+    ["Leo","Hey RM! How was your weekend?"],
+    ["RM","It was great, thanks! On Saturday, I was at the track for practice. On Sunday, my family and I were at the beach in Port Dickson."],
+    ["Leo","Nice! Was the weather good?"],
+    ["RM","Yes, it was sunny and hot. The water was really clear. What about you?"],
+    ["Leo","My weekend was boring. I was at home, and my brother and I were sick."],
+    ["RM","Oh no! Are you OK now?"],
+    ["Leo","Yes, I'm better now, thanks. Were you tired after practice?"],
+    ["RM","Very tired! The track was busy, and there were a lot of fast drivers. But my lap times were better than last week."],
+    ["Leo","That's good news! The next race is in two weeks, right?"],
+    ["RM","Yes. I am a little nervous, but I am also excited."]],
+   qs:[
+    {q:"Where was RM on Sunday?",o:["At the track","At the beach","At home","At school"],a:1},
+    {q:"Why was Leo's weekend boring?",o:["He was at work","He and his brother were sick","The weather was bad","His kart was broken"],a:1},
+    {q:"How were RM's lap times?",o:["Worse than last week","The same as last week","Better than last week","She did not drive"],a:2}]},
+  speak:{topic:"Post-race interview",parts:[
+    ["Reporter","How do you feel after today's race?"],
+    ["RM","I feel very happy. I started from P6, and I finished in P3. It was my first podium this season, so it was a special day for me and my team."],
+    ["Reporter","What was the most difficult part of the race?"],
+    ["RM","The track was wet in the morning, so the grip was low. In the first two laps, I was very careful in the corners. After that, the track was drier, and I could push harder."],
+    ["Reporter","How did you overtake the driver in front of you?"],
+    ["RM","I was faster in the last corner, so I stayed close to him on the straight. Then I braked later than him into Turn 1 and took the position."],
+    ["Reporter","What will you work on before the next race?"],
+    ["RM","I want to improve my starts. I lost one position at the start today. I will practise with my team and look at my data."],
+    ["Reporter","Any message for your supporters?"],
+    ["RM","Thank you to my family, my team and my sponsors. I could not do this without you!"]]},
+  grammar:{title:"was / were (the past of am / is / are)",
+    intro:"After the race, yesterday, last week... When we talk about the past, am and is become was, and are becomes were. Reporters usually ask about a race that just finished, so you will use these a lot.",
+    rules:[["I / he / she / it\none person or one thing","was","I was nervous.\nThe track was wet."],["you / we / they\nmany people or many things","were","You were fast.\nThe tyres were cold."]],
+    traps:[["Yesterday I am tired.","Yesterday I was tired.","Yesterday is the past, so use was."],["The tyres was cold.","The tyres were cold.","Tyres are many, so use were."],["You was fast!","You were fast!","You always uses were."],["Was you ready?","Were you ready?","Questions too: Were you...?"]],
+    forms:"Questions: Was it hard? Were you nervous?\nNegative: wasn't / weren't\nPast time words: yesterday, last week, this morning, after the race, two days ago",
+    tip:"How to answer: first ask \"Is it in the past?\", then ask \"Is the subject one or many?\""},
+  quiz:[
+    {c:"Grammar",q:"The track ___ wet this morning.",o:["was","were","is","be"],a:0,y:"This morning is finished (past). The track is one thing, so we use was."},
+    {c:"Grammar",q:"The tyres ___ cold in the first lap.",o:["was","were","is","be"],a:1,y:"Tyres are many, and it is in the past, so we use were."},
+    {c:"Grammar",q:"I ___ very happy after the race yesterday.",o:["am","was","were","is"],a:1,y:"Yesterday = past. The subject is I, so we use was."},
+    {c:"Grammar",q:"My mum and dad ___ at the track last Sunday.",o:["was","were","are","is"],a:1,y:"Two people + last Sunday (past), so we use were."},
+    {c:"Grammar",q:"___ you nervous before the final yesterday?",o:["Was","Were","Are","Is"],a:1,y:"In the past, you always uses were, even for one person."},
+    {c:"Grammar",q:"It ___ my first podium this season.",o:["was","were","are","am"],a:0,y:"The race is finished. It is one thing, so we use was."},
+    {c:"Grammar",q:"We ___ not fast in the rain last week.",o:["was","were","is","are"],a:1,y:"We + last week, so we use were."},
+    {c:"Grammar",q:"Which sentence is correct?",o:["Yesterday I am very tired.","Yesterday I was very tired.","Yesterday I were very tired.","Yesterday I be very tired."],a:1,y:"Yesterday means the past. With I, we use was."},
+    {c:"Grammar",q:"Two drivers ___ in front of me after the start.",o:["was","were","is","am"],a:1,y:"Two drivers are many, so we use were."},
+    {c:"Grammar",q:"\"Was the race difficult?\" \"Yes, it ___.\"",o:["was","were","is","did"],a:0,y:"If the question uses Was, the answer uses was: Yes, it was. / No, it wasn't."},
+    {c:"Vocabulary",q:"The top three drivers stand on the ___.",o:["paddock","podium","pit lane","grid"],a:1,y:"The podium is for the top three. The paddock is where teams work."},
+    {c:"Vocabulary",q:"When you pass the kart in front of you, you ___ it.",o:["overtake","brake","follow","crash"],a:0,y:"Overtake = pass the kart in front of you."},
+    {c:"Vocabulary",q:"On a wet track, the tyres have less ___.",o:["grip","fuel","noise","colour"],a:0,y:"Grip = how well the tyres hold the track. On a wet track, grip is low."},
+    {c:"Vocabulary",q:"You press the ___ to slow down.",o:["brake","break","gas pedal","horn"],a:0,y:"Brake = slow down. Break means to damage something or to rest. They sound the same but mean different things!"},
+    {c:"Vocabulary",q:"A long part of the track with no corners is a ___.",o:["straight","corner","hairpin","kerb"],a:0,y:"A straight has no corners. A hairpin is a very tight U-shaped corner."},
+    {c:"Vocabulary",q:"\"I want to ___ my starts.\" (make them better)",o:["improve","remove","prove","move"],a:0,y:"Improve = make something better."},
+    {c:"Spelling",q:"Choose the correct spelling: the place for the top three drivers.",o:["podiem","podium","poduim","podeum"],a:1,y:"po-di-um. It ends with -um."},
+    {c:"Spelling",q:"Choose the correct spelling: to pass the kart in front of you.",o:["overtack","overtake","overteak","ovatake"],a:1,y:"over + take. You take the position."},
+    {c:"Spelling",q:"Choose the correct spelling: \"I ___ late into Turn 1.\" (past of brake)",o:["braked","braket","brakked","breaked"],a:0,y:"Brake already ends with e, so just add d: braked."},
+    {c:"Spelling",q:"Choose the correct spelling: a person who cheers for you.",o:["suporter","supportor","supporter","suppoter"],a:2,y:"su-pp-or-ter: two p's, and it ends with -er."},
+    {c:"Spelling",q:"Choose the correct spelling: not easy.",o:["dificult","difficult","diffcult","difficalt"],a:1,y:"di-ff-i-cult: two f's."},
+    {c:"Speaking",q:"Friend: \"How was your weekend?\" What is the best reply?",o:["It is Saturday.","It was great! I went to the beach with my family.","Yes, it was.","I'm going next week."],a:1,y:"How was...? asks how something was. Say how it was (great / OK), then say what you did."},
+    {c:"Speaking",q:"Reporter: \"How do you feel after the race?\" What is the best reply?",o:["I feel the race.","I feel very happy. It was a good race for me.","Yes, I do.","The race is at 2 p.m."],a:1,y:"How do you feel? → I feel + a feeling. Then add one reason."},
+    {c:"Speaking",q:"Friend: \"Sorry I'm late!\" What is the best reply?",o:["You're welcome.","No problem. We were just talking about the race.","Me too, thank you.","Good morning, sorry."],a:1,y:"When someone says sorry, say No problem or Don't worry. You're welcome is the reply to Thank you."},
+    {c:"Speaking",q:"Friend: \"Were you at school yesterday?\" What is the best reply?",o:["No, I'm not.","No, I wasn't. I was at the track for practice.","Yes, I were.","No, I didn't."],a:1,y:"The question uses Were you, so answer with I was / I wasn't."}],
+  talk:{role:"Leo (friend)",qs:[
+    {q:"How was your weekend?",m:"It was great! I was at the track on Saturday, and I was at the beach with my family on Sunday."},
+    {q:"What was the best part of your week?",m:"The best part was practice on Saturday. My lap times were better than last week, so I was very happy."},
+    {q:"What was your favourite holiday?",m:"My favourite holiday was a trip to Penang with my family. The food was amazing, and the weather was great."}]}
+}];
+const ROAD=[
+ [1,"Daily life","am / is / are","Meet a new friend + introduce myself"],[2,"Racing","was / were","Weekend chat + race interview"],
+ [3,"Daily life","there is / there are","My school and my home"],[4,"Racing","Present simple: he plays / she goes","A day with my team"],
+ [5,"Daily life","Present continuous: I am doing","What are you doing this weekend?"],[6,"Racing","Past simple: -ed","Practice day"],
+ [7,"Daily life","Irregular past: went / ate / saw","Travel and food"],[8,"Racing","can / could / should","Talking to my mechanic"],
+ [9,"Daily life","Comparing: faster / the fastest","Comparing food and places"],[10,"Racing","will / going to + review","Pre-race interview"]];
+const CATS=["Grammar","Vocabulary","Spelling","Speaking"];
+const STEPS=[["vocab","Words","8 words · 5 min"],["listen","Listening","Dialogue + 3 questions · 10 min"],["speak","Read aloud","Listen to 200 words, then read them yourself · 15 min"],["quiz","Grammar + 25 questions","Read the lesson first · 20 min"],["talk","Speaking practice","Answer 3 questions · 10 min"]];
+
+/* ---------- ICONS ---------- */
+const sv=(p,s=22)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
+const IC={back:sv('<path d="M15 18l-6-6 6-6"/>'),play:sv('<path d="M7 4l13 8-13 8z" fill="currentColor"/>',26),stop:sv('<rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor"/>',24),
+spk:sv('<path d="M11 5L6 9H2v6h4l5 4zM15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/>',20),mic:sv('<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>',34),
+ok:sv('<path d="M5 12l5 5L20 7"/>',18),no:sv('<path d="M6 6l12 12M18 6L6 18"/>',18),lock:sv('<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',18),
+fire:sv('<path d="M12 2c1 4 5 5 5 10a5 5 0 0 1-10 0c0-3 2-4 2-7 2 1 3 2 3 4"/>',18)};
+
+/* ---------- STATE / STORAGE ---------- */
+const KEY="pitlane-progress-v1";
+const blank=()=>({v:1,days:{},mistakes:[],streak:{last:"",n:0},log:[],updatedAt:0});
+let P=blank();
+try{const t=localStorage.getItem(KEY);if(t)P=Object.assign(blank(),JSON.parse(t))}catch(e){}
+function migrate(){const M={"文法":"Grammar","词汇":"Vocabulary","拼写":"Spelling","沟通":"Speaking"};Object.values(P.days||{}).forEach(d=>{if(d&&d.quiz&&d.quiz.byCat){const n={};Object.entries(d.quiz.byCat).forEach(([k,v])=>n[M[k]||k]=v);d.quiz.byCat=n}})}
+migrate();
+const D=n=>P.days[n]||(P.days[n]={});
+let S={view:"home"};
+let NS={tts:null,dict:null,sample:null,db:null};
+let saveT=null;
+function today(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function touch(what){
+  const t=today();
+  if(P.streak.last!==t){const y=new Date();y.setDate(y.getDate()-1);const ys=y.getFullYear()+"-"+String(y.getMonth()+1).padStart(2,"0")+"-"+String(y.getDate()).padStart(2,"0");P.streak.n=P.streak.last===ys?P.streak.n+1:1;P.streak.last=t}
+  if(what){P.log.push({t:Date.now(),w:what});if(P.log.length>300)P.log=P.log.slice(-300)}
+  save();
+}
+function save(){
+  P.updatedAt=Date.now();
+  try{localStorage.setItem(KEY,JSON.stringify(P))}catch(e){}
+  clearTimeout(saveT);saveT=setTimeout(()=>{if(NS.db){try{NS.db.doc("progress/main").set(JSON.parse(JSON.stringify(P))).catch(()=>{})}catch(e){}}},1200);
+}
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const nl=s=>esc(s).replace(/\n/g,"<br>");
+function perm(n,seed){const a=[...Array(n).keys()];let s=seed;for(let i=n-1;i>0;i--){s=(s*9301+49297)%233280;const j=Math.floor(s/233280*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+const AVAIL=DAYS.length;
+function stepDone(n,k){const d=P.days[n]||{};if(k==="vocab")return !!d.vocab;if(k==="listen")return d.listen!=null;if(k==="speak")return d.speak!=null||!!d.speakSkip;if(k==="quiz")return !!d.quiz;if(k==="talk")return (d.talk||0)>=DAYS[n-1].talk.qs.length||!!d.talkSkip;return false}
+const dayDone=n=>STEPS.every(s=>stepDone(n,s[0]));
+function curDay(){for(let n=1;n<=AVAIL;n++)if(!dayDone(n))return n;return AVAIL}
+function go(view,x){stopAudio();Object.assign(S,{view},x||{});render();window.scrollTo(0,0)}
+
+/* ---------- AUDIO (Claude voice, then browser voice) ---------- */
+let lineCb=null;
+function stopAudio(){try{NS.tts&&NS.tts.stop()}catch(e){}try{window.speechSynthesis&&speechSynthesis.cancel()}catch(e){}S.playing=false}
+function speak(lines,rate){
+  rate=rate||1;stopAudio();S.playing=true;updPlay();
+  const arr=Array.isArray(lines)?lines:[{text:lines}];
+  if(NS.tts){
+    NS.tts.speak(arr.map((l,i)=>({text:l.text,voice:l.voice||"buttery",language:"en",id:"L"+i})),{rate}).then(()=>{S.playing=false;updPlay();hl(-1)}).catch(()=>{S.playing=false;updPlay();hl(-1)});
+    return;
+  }
+  if(!window.speechSynthesis){S.playing=false;updPlay();return}
+  const vs=speechSynthesis.getVoices();const v=vs.find(x=>/en-GB/i.test(x.lang))||vs.find(x=>/^en/i.test(x.lang));
+  arr.forEach((l,i)=>{const u=new SpeechSynthesisUtterance(l.text);u.lang="en-GB";if(v)u.voice=v;u.rate=rate;u.pitch=l.voice==="rounded"?1.15:.95;u.onstart=()=>hl(i);if(i===arr.length-1)u.onend=()=>{S.playing=false;updPlay();hl(-1)};speechSynthesis.speak(u)});
+}
+function hl(i){document.querySelectorAll(".line").forEach((el,j)=>el.classList.toggle("cur",j===i))}
+function updPlay(){const b=document.getElementById("playbtn");if(b){b.innerHTML=S.playing?IC.stop:IC.play;b.setAttribute("aria-label",S.playing?"Stop":"Play")}}
+
+/* ---------- DICTATION ---------- */
+let rec=null;
+const SRC=window.SpeechRecognition||window.webkitSpeechRecognition;
+const hasMic=()=>!!(NS.dict||SRC);
+function micToggle(onDone){
+  if(!hasMic()){S.micMsg="The microphone does not work here. Please open this app in Chrome on your phone. You can also type.";render();return}
+  if(rec&&rec.on){const r=rec;if(r.sr){r.stopping=true;try{r.sr.stop()}catch(e){}setTimeout(()=>finishRec(r),2000)}else{NS.dict.stop().catch(()=>{}).finally(()=>finishRec(r))}return}
+  const r={on:true,final:"",partial:"",done:onDone};rec=r;S.micMsg="";
+  if(NS.dict){NS.dict.start().catch(e=>{if(rec===r)rec=null;S.micMsg=(e&&e.code==="not_granted")?"You did not allow the microphone. You can type instead.":"The microphone did not start. Please tap again.";render()})}
+  else{const sr=new SRC();sr.lang="en-US";sr.continuous=!/Android/i.test(navigator.userAgent);sr.interimResults=true;r.sr=sr;r.committed="";r.sess="";
+    sr.onresult=e=>{let fin="",par="";for(let i=0;i<e.results.length;i++){const t=e.results[i][0].transcript;if(e.results[i].isFinal)fin+=t+" ";else par+=t+" "}r.sess=fin.trim();r.partial=par.trim();r.final=(r.committed+" "+r.sess).trim();updMic()};
+    sr.onerror=e=>{if(e.error==="not-allowed"||e.error==="service-not-allowed"){r.on=false;if(rec===r)rec=null;S.micMsg=window.claude?"The microphone does not work inside the Claude app. Open this app in Chrome instead.":"The microphone is blocked. Tap the icon next to the web address → Permissions → Microphone → Allow. Then try again.";render()}};
+    sr.onend=()=>{r.committed=(r.committed+" "+(r.sess||"")).trim();r.sess="";r.final=r.committed;if(r.on&&!r.stopping){try{sr.start()}catch(e){finishRec(r)}}else finishRec(r)};
+    try{sr.start()}catch(e){r.on=false;rec=null;S.micMsg="The microphone did not start. Please tap again.";render();return}}
+  updMic();
+}
+function finishRec(r){if(!r||!r.on)return;r.on=false;if(rec===r)rec=null;const t=((r.final||"")+" "+(r.partial||"")).trim();updMic();r.done(t)}
+function updMic(){const b=document.getElementById("micbtn");if(b){b.classList.toggle("on",!!(rec&&rec.on));b.setAttribute("aria-label",rec&&rec.on?"Stop recording":"Start recording")}const l=document.getElementById("live");if(l)l.textContent=rec&&rec.on?((rec.final+" "+rec.partial).trim().split(" ").slice(-14).join(" ")||"Listening..."):""}
+
+/* ---------- PRONUNCIATION CHECK ---------- */
+const ONES=["zero","one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen","eighteen","nineteen"],TENS=["","","twenty","thirty","forty","fifty","sixty","seventy","eighty","ninety"];
+const numW=n=>n<20?ONES[n]:n<100?TENS[Math.floor(n/10)]+(n%10?" "+ONES[n%10]:""):String(n);
+const CON={"i'm":"i am","it's":"it is","let's":"let us","can't":"can not","cannot":"can not","don't":"do not","isn't":"is not","i'll":"i will","you're":"you are","what's":"what is","wasn't":"was not","weren't":"were not","couldn't":"could not"};
+const EQ={practise:"practice",favourite:"favorite",colour:"color",tyres:"tires",tyre:"tire"};
+function norm(s){s=s.toLowerCase().replace(/[’‘]/g,"'").replace(/-/g," ");s=s.split(/\s+/).map(w=>{const c=w.replace(/[^a-z0-9']/g,"");return CON[c]||w}).join(" ");s=s.replace(/([a-z])(\d)/g,"$1 $2").replace(/\d+/g,m=>" "+numW(+m)+" ");return s.replace(/[^a-z' ]/g," ").split(/\s+/).filter(Boolean).map(w=>EQ[w.replace(/'/g,"")]||w.replace(/'/g,""))}
+function compare(target,heard){
+  const disp=target.split(/\s+/);const flat=[];disp.forEach((w,i)=>norm(w).forEach(t=>flat.push([t,i])));
+  const h=norm(heard);const n=flat.length,m=h.length;const L=Array.from({length:n+1},()=>new Array(m+1).fill(0));
+  for(let i=n-1;i>=0;i--)for(let j=m-1;j>=0;j--)L[i][j]=flat[i][0]===h[j]?L[i+1][j+1]+1:Math.max(L[i+1][j],L[i][j+1]);
+  const hit=new Array(n).fill(false);let i=0,j=0;while(i<n&&j<m){if(flat[i][0]===h[j]){hit[i]=true;i++;j++}else if(L[i+1][j]>=L[i][j+1])i++;else j++}
+  const ok=disp.map(()=>true);flat.forEach((f,k)=>{if(!hit[k])ok[f[1]]=false});
+  return disp.map((w,k)=>({w,ok:ok[k]}));
+}
+const TIP={choir:"Say /kwaɪə/, like \"kwire\" (it rhymes with fire). The ch sounds like k.",podium:"Say PO-di-um. Make PO strong.",qualifying:"Say KWOL-i-fy-ing. qu sounds like kw.",friendly:"Say fr together, and say the -ly at the end.",improve:"Say im-PROVE. Make PROVE strong. For v, touch your bottom lip with your top teeth.",supporters:"Say sup-POR-ters. Make POR strong, and say the s at the end.",kuala:"Say KWAH-la.",lumpur:"Say LOOM-poor.",braked:"brake + t: say \"braykt\". Say the t softly at the end.",started:"start + id: say STAR-tid.",finished:"finish + t: say FIN-isht.",could:"Don't say the l: say \"kud\".",without:"Say with-OUT. For th, put your tongue between your teeth.",season:"Say SEE-zn. The s sounds like z.",second:"Say SEC-ond. Don't drop the d at the end.",track:"Say tr together. Say the k sound at the end.",lap:"Say the p softly at the end.",grip:"Say gr together. Say the p at the end."};
+function tipFor(w){w=w.toLowerCase().replace(/[^a-z']/g,"");
+  if(TIP[w])return TIP[w];
+  if(["the","this","that","then","than","there","they","with","their","them","other","brother","mother","father"].includes(w))return "th: put the tip of your tongue between your teeth and push air out (/ð/). Don't say d or z.";
+  if(["three","think","thank","thanks","month","birthday"].includes(w))return "th: put your tongue between your teeth and blow air (/θ/). Don't say t or s.";
+  if(/ed$/.test(w))return "Say the -ed ending: after p / k / s / sh / ch it sounds like /t/; after t / d it sounds like /ɪd/; after other sounds it is /d/.";
+  if(/[td]$/.test(w))return "Say the "+w.slice(-1)+" at the end softly. Don't drop it.";
+  if(/s$/.test(w)&&w.length>3)return "Say the s at the end (for many things, or for he / she).";
+  return "This word was not clear. Listen once at slow speed, notice which part is strong, then say it again.";}
+
+/* ---------- VIEWS ---------- */
+const hero=()=>`<div class="hero"><svg viewBox="0 0 390 200" preserveAspectRatio="xMidYMid slice" role="img" aria-label="A coral beach towel with a racing helmet on the sand, next to the sea">
+<defs><linearGradient id="sea" x1="0" x2="1"><stop offset="0" stop-color="#63B5B1"/><stop offset="1" stop-color="#2A7C80"/></linearGradient></defs>
+<rect width="390" height="200" fill="#ECD5B8"/>
+<g fill="#D9BE9C" opacity=".5"><circle cx="30" cy="150" r="1.6"/><circle cx="90" cy="30" r="1.4"/><circle cx="200" cy="170" r="1.6"/><circle cx="60" cy="90" r="1.2"/><circle cx="215" cy="40" r="1.4"/><circle cx="140" cy="185" r="1.3"/></g>
+<path d="M262 0C240 40 278 78 252 120C230 156 270 180 258 200H390V0Z" fill="url(#sea)"/>
+<path d="M262 0C240 40 278 78 252 120C230 156 270 180 258 200" fill="none" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round" opacity=".92"/>
+<path d="M276 0C254 40 292 78 266 120C244 156 284 180 272 200" fill="none" stroke="#FFFFFF" stroke-width="2" opacity=".45"/>
+<g stroke="#FFFFFF" stroke-width="2" fill="none" opacity=".3" stroke-linecap="round"><path d="M310 40q10-6 20 0"/><path d="M340 95q10-6 20 0"/><path d="M305 150q10-6 20 0"/><path d="M350 175q8-5 16 0"/></g>
+<g transform="rotate(-14 125 115)"><rect x="64" y="80" width="134" height="72" rx="4" fill="#000" opacity=".1" transform="translate(7 8)"/>
+<rect x="64" y="80" width="134" height="72" rx="4" fill="#D9593A"/><rect x="64" y="96" width="134" height="6" fill="#F4B69E" opacity=".75"/><rect x="64" y="130" width="134" height="6" fill="#F4B69E" opacity=".75"/>
+<g stroke="#D9593A" stroke-width="2"><path d="M64 84h-7M64 94h-7M64 104h-7M64 114h-7M64 124h-7M64 134h-7M64 144h-7M198 84h7M198 94h7M198 104h7M198 114h7M198 124h7M198 134h7M198 144h7"/></g></g>
+<ellipse cx="160" cy="132" rx="24" ry="7" fill="#000" opacity=".12"/>
+<circle cx="155" cy="112" r="22" fill="#FBF6EE"/><path d="M137 108a19 19 0 0 1 34-6l-4 12h-26z" fill="#1E5E62"/><path d="M140 125a22 22 0 0 0 33-6" stroke="#D9593A" stroke-width="5" fill="none" stroke-linecap="round"/>
+<g fill="#2A6F73"><ellipse cx="36" cy="54" rx="6" ry="13" transform="rotate(-20 36 54)"/><ellipse cx="52" cy="58" rx="6" ry="13" transform="rotate(-8 52 58)"/></g>
+</svg>
+<nav class="nav" aria-label="Main menu">
+<button class="${S.view==="home"?"on":""}" data-act="nav" data-arg="home">Today</button>
+<button class="${S.view==="report"?"on":""}" data-act="nav" data-arg="report">Progress</button>
+<button class="${S.view==="mistakes"?"on":""}" data-act="nav" data-arg="mistakes">Mistakes</button>
+<button class="${S.view==="road"?"on":""}" data-act="nav" data-arg="road">10-day plan</button>
+</nav></div>`;
+const topbar=(label,title,back)=>`<div class="top"><button class="iconbtn" data-act="go" data-arg="${back||"day"}" aria-label="Back">${IC.back}</button><div><div class="sm mute">${esc(label)}</div><h2>${esc(title)}</h2></div></div>`;
+
+const V={};
+V.home=()=>{
+  const n=curDay(),d=DAYS[n-1];const all=dayDone(AVAIL)&&n===AVAIL;
+  const nxt=STEPS.find(s=>!stepDone(n,s[0]));
+  const doneCount=ROAD.filter(r=>r[0]<=AVAIL&&dayDone(r[0])).length;
+  return hero()+`<div class="pad stack" style="margin-top:18px">
+  <div class="row" style="justify-content:space-between"><div><div class="sm mute">${greet()}</div><h1>Hi RM</h1></div>
+  <span class="chip c">${IC.fire} ${P.streak.n||0}-day streak</span></div>
+  <div class="card stack">
+    <div class="row" style="justify-content:space-between"><b>Day ${n} / 10</b><span class="chip t">${d.type}</span></div>
+    <h2>${esc(d.title)}</h2>
+    <div class="bar" aria-label="10-day progress"><i style="width:${doneCount*10}%"></i></div>
+    <p class="sm mute">Today's grammar: ${esc(ROAD[n-1][2])}</p>
+  </div>
+  <div class="stack" style="gap:8px">${STEPS.map((s,i)=>{const ok=stepDone(n,s[0]),now=nxt&&nxt[0]===s[0];return `<button class="step ${now?"now":""}" data-act="step" data-arg="${s[0]}"><span class="dot ${ok?"ok":now?"now":""}">${ok?IC.ok:i+1}</span><span style="flex:1"><b>${s[1]}</b><br><span class="sm mute">${ok?"Done":s[2]}</span></span></button>`}).join("")}</div>
+  ${all?`<div class="card"><b>Day 1–${AVAIL} are all done!</b><p class="sm mute">Open Progress, tap Copy report, and send it to Claude. The next days will match your level.</p></div>`:`<button class="btn pri" data-act="step" data-arg="${nxt?nxt[0]:"vocab"}">${nxt&&nxt[0]!=="vocab"?"Continue: ":"Start: "}${nxt?nxt[1]:"Words"}</button>`}
+  ${NS.dictChecked&&!hasMic()?`<p class="note">Note: Read aloud and Speaking practice need the microphone. Please open this app in Chrome on your phone.</p>`:""}
+  ${S.micMsg?`<p class="note">${esc(S.micMsg)}</p>`:""}
+  </div>`;
+};
+function greet(){const h=new Date().getHours();return h<12?"Good morning":h<18?"Good afternoon":"Good evening"}
+V.day=()=>{S.view="home";return V.home()};
+
+V.vocab=()=>{const d=DAYS[S.day-1];return topbar("Day "+S.day+" · Words","8 new words","home")+`<div class="pad stack">
+<p class="sm mute">Tap the speaker to listen. Say each word once, then read the example.</p>
+${d.vocab.map((v,i)=>`<div class="card stack" style="gap:6px"><div class="row" style="justify-content:space-between"><span style="font-size:24px;font-weight:900">${esc(v.w)}</span><button class="iconbtn" style="background:var(--card2)" data-act="say" data-arg="v${i}" aria-label="Listen to ${esc(v.w)}">${IC.spk}</button></div><span>${esc(v.z)}</span><span class="mute">${esc(v.e)}</span></div>`).join("")}
+<button class="btn pri" data-act="vocabDone">Done → Listening</button></div>`};
+
+V.listen=()=>{const d=DAYS[S.day-1],L=d.listen;const r=S.lr||{};const rate=S.rate||.9;
+return topbar("Day "+S.day+" · Listening",d.title,"home")+`<div class="pad stack">
+<div class="card stack"><div class="row"><button id="playbtn" class="mic" style="width:64px;height:64px;margin:0" data-act="playDialog" aria-label="Play">${S.playing?IC.stop:IC.play}</button><p class="sm" style="flex:1">First time: listen with no text.<br>Second time: turn on the text.</p></div>
+<div><div class="sm mute" style="margin-bottom:6px">Speed (slow it down if it is too fast)</div><div class="seg">${[[.75,"Slow"],[.9,"Medium"],[1,"Normal"]].map(x=>`<button class="${rate===x[0]?"on":""}" data-act="rate" data-arg="${x[0]}">${x[1]} ${x[0]}×</button>`).join("")}</div></div>
+<label class="row sm"><input type="checkbox" data-act="toggleTxt" ${S.showTxt?"checked":""} style="width:22px;height:22px;accent-color:var(--coral)"> Show text</label></div>
+<div class="card stack ${S.showTxt?"":"blur"}" style="gap:4px">${L.lines.map(l=>`<div class="line"><span class="who ${l[0]==="RM"?"rm":"o"}">${esc(l[0])}:</span> <span class="txt">${esc(l[1])}</span></div>`).join("")}</div>
+<h2>Answer 3 questions</h2>
+${L.qs.map((q,qi)=>`<div class="stack" style="gap:8px"><b>${qi+1}. ${esc(q.q)}</b>${q.o.map((o,oi)=>{let c="";if(S.lChecked){if(oi===q.a)c="ok";else if(r[qi]===oi)c="bad"}else if(r[qi]===oi)c="sel";return `<button class="opt ${c}" data-act="lpick" data-arg="${qi}-${oi}" ${S.lChecked?"disabled":""}><span class="k">${"ABCD"[oi]}</span>${esc(o)}</button>`}).join("")}</div>`).join("")}
+${S.lChecked?`<div class="card"><b>${L.qs.filter((q,i)=>r[i]===q.a).length} / 3 correct</b><p class="sm mute">${L.qs.filter((q,i)=>r[i]===q.a).length<3?"Turn on the text and listen again. Find the sentence with the answer.":"Great listening!"}</p></div><button class="btn pri" data-act="go" data-arg="speak">Next: Read aloud</button>`:`<button class="btn pri" data-act="lcheck" ${Object.keys(r).length<3?"disabled":""}>Check answers</button>`}
+</div>`};
+
+function speakAnalyse(heard){
+  const K=DAYS[S.day-1].speak;const words=[];K.parts.forEach(p=>{if(p[0]==="RM")words.push(...p[1].split(/\s+/))});
+  const res=compare(words.join(" "),heard);const ok=res.filter(x=>x.ok).length;
+  const sents=[];let cur={w:[],ok:0};res.forEach(x=>{cur.w.push(x.w);if(x.ok)cur.ok++;if(/[.!?]$/.test(x.w)){sents.push(cur);cur={w:[],ok:0}}});if(cur.w.length)sents.push(cur);
+  const weak=sents.map(x=>({text:x.w.join(" "),r:x.ok/x.w.length})).filter(x=>x.r<.8);
+  const bad=[];res.forEach(x=>{const k=x.w.toLowerCase().replace(/[^a-z']/g,"");if(!x.ok&&k&&!bad.includes(k))bad.push(k)});
+  return {words:res,score:Math.round(ok/res.length*100),weak,bad,heard};
+}
+V.speak=()=>{const d=DAYS[S.day-1],K=d.speak;const R=S.sres;const rate=S.rate||.9;const interview=K.parts.some(p=>p[0]!=="RM");let gi=0;
+const body=K.parts.map(p=>{if(p[0]!=="RM")return `<div class="line"><span class="who o">${esc(p[0])}:</span> <span class="mute">${esc(p[1])}</span></div>`;
+  const html=p[1].split(/\s+/).map(w=>{const r=R?R.words[gi]:null;gi++;return r?`<span class="${r.ok?"w-ok":"w-bad"}">${esc(w)}</span>`:esc(w)}).join(" ");
+  return `<div class="line">${interview?'<span class="who rm">RM:</span> ':""}${html}</div>`}).join("");
+const best=(P.days[S.day]||{}).speak;
+return topbar("Day "+S.day+" · Read aloud",K.topic,"home")+`<div class="pad stack">
+<div class="card stack"><div class="row"><button id="playbtn" class="mic" style="width:64px;height:64px;margin:0" data-act="playSpeak" aria-label="Play">${S.playing?IC.stop:IC.play}</button><p class="sm" style="flex:1">① Listen to the whole text. Follow the words with your eyes.<br>${interview?"② Then read RM's parts yourself (don't read the reporter's questions).":"② Then read the whole text yourself."}</p></div>
+<div class="seg">${[[.75,"Slow"],[.9,"Medium"],[1,"Normal"]].map(x=>`<button class="${rate===x[0]?"on":""}" data-act="rate" data-arg="${x[0]}">${x[1]} ${x[0]}×</button>`).join("")}</div></div>
+<div class="card stack" style="gap:6px;font-size:17px;line-height:1.7">${body}</div>
+${R?`<div class="card row" style="gap:16px">${ring(R.score,100)}<div><b style="font-size:20px">${R.score}% clear</b><p class="sm mute">${R.score>=90?"Excellent! Try normal speed next time.":R.score>=70?"Good! Practise the words below.":"Listen once more at slow speed, then read again."}${best&&best.best?"<br>Best score: "+best.best+"%":""}</p></div></div>
+${R.bad.length?`<h2>Words to practise</h2>${R.bad.slice(0,5).map(w=>`<div class="tip"><b>${esc(w)}</b>: ${esc(tipFor(w))}</div>`).join("")}`:`<div class="tip">Every word was clear!</div>`}
+${R.weak.length?`<h2>Practise these sentences again</h2>${R.weak.slice(0,4).map((x,i)=>`<div class="card row"><p style="flex:1">${esc(x.text)}</p><button class="iconbtn" style="background:var(--card2)" data-act="saySent" data-arg="${i}" aria-label="Listen to this sentence">${IC.spk}</button></div>`).join("")}`:""}
+<p class="note">What the app heard: ${esc(R.heard.length>400?R.heard.slice(0,400)+"...":R.heard||"(no sound)")}</p>`:""}
+<div class="stack" style="align-items:center;gap:8px"><span class="sm mute">${R?"Read the whole text again. Can you get a higher score?":"③ Tap to start. Tap again when you finish."}</span>
+<button id="micbtn" class="mic ${rec&&rec.on?"on":""}" data-act="micSpeak" aria-label="Start recording">${IC.mic}</button><span id="live" class="sm mute" aria-live="polite"></span>
+${S.micMsg?`<p class="note" style="text-align:center">${esc(S.micMsg)}</p>`:""}</div>
+${R?`<button class="btn pri" data-act="speakDone">Done → Today's grammar</button>`:""}
+<button class="btn" style="background:none;color:var(--mute);min-height:44px" data-act="speakSkip">I can't use sound today, skip</button>
+</div>`};
+
+V.lesson=()=>{const g=DAYS[S.day-1].grammar;
+return topbar("Day "+S.day+" · Today's grammar",g.title,"home")+`<div class="pad stack">
+<div class="card"><p>${nl(g.intro)}</p></div>
+<div class="card"><table><tbody>${g.rules.map(r=>`<tr><td style="width:42%">${nl(r[0])}</td><td style="width:16%"><b style="color:var(--coral);font-size:20px">${esc(r[1])}</b></td><td class="mute">${nl(r[2])}</td></tr>`).join("")}</tbody></table></div>
+<h2>Common mistakes</h2>
+${g.traps.map(t=>`<div class="card stack" style="gap:4px"><span class="row" style="color:var(--coral)">${IC.no}<s>${esc(t[0])}</s></span><span class="row" style="color:var(--teal);font-weight:800">${IC.ok}${esc(t[1])}</span><span class="sm mute">${esc(t[2])}</span></div>`).join("")}
+<div class="card"><p>${nl(g.forms)}</p></div>
+<div class="tip">${esc(g.tip)}</div>
+<button class="btn pri" data-act="startQuiz">I understand. Start the 25 questions</button></div>`};
+
+V.quiz=()=>{const set=S.qset;const k=S.qi;const it=set[k];const q=DAYS[it.d-1].quiz[it.i];const key=it.d+"-"+it.i;const order=perm(4,it.d*131+it.i*7+3);const ch=S.ans[key];
+const answered=set.filter(x=>S.ans[x.d+"-"+x.i]!=null).length;
+return topbar(S.retry?"Redo mistakes":"Day "+S.day+" · 25 questions",(k+1)+" / "+set.length,S.retry?"mistakes":"home")+`<div class="pad stack">
+<div class="bar"><i style="width:${(k+1)/set.length*100}%;background:var(--coral)"></i></div>
+<div class="row"><span class="chip ${q.c==="Grammar"?"t":q.c==="Spelling"?"s":"c"}">${q.c}</span>${S.retry?`<span class="chip">Day ${it.d}</span>`:""}</div>
+<p class="big">${esc(q.q)}</p>
+<div class="stack" style="gap:10px">${order.map((oi,pos)=>`<button class="opt ${ch===oi?"sel":""}" data-act="qpick" data-arg="${oi}"><span class="k">${"ABCD"[pos]}</span>${esc(q.o[oi])}</button>`).join("")}</div>
+<div class="row"><button class="btn sec" data-act="qprev" ${k===0?"disabled":""}>Back</button>${k+1<set.length?`<button class="btn pri" data-act="qnext">Next</button>`:`<button class="btn pri" data-act="qsubmit">Submit</button>`}</div>
+${S.qWarn?`<div class="tip">${set.length-answered} questions are not answered. Tap Submit again to check anyway.</div>`:""}
+<div><div class="sm mute" style="margin-bottom:6px">Answered ${answered} / ${set.length} (tap a number to jump)</div><div class="grid5">${set.map((x,j)=>`<button class="qdot ${S.ans[x.d+"-"+x.i]!=null?"a":""} ${j===k?"cur":""}" data-act="qjump" data-arg="${j}" aria-label="Question ${j+1}">${j+1}</button>`).join("")}</div></div>
+${k+1<set.length?`<button class="btn sec" data-act="qsubmit">Submit</button>`:""}
+</div>`};
+
+function ring(score,total){const p=total?score/total:0;const C=2*Math.PI*40;return `<svg class="ring" viewBox="0 0 96 96" role="img" aria-label="${score} / ${total}"><circle cx="48" cy="48" r="40" fill="none" stroke="var(--card2)" stroke-width="10"/><circle cx="48" cy="48" r="40" fill="none" stroke="var(--coral)" stroke-width="10" stroke-linecap="round" stroke-dasharray="${C*p} ${C}" transform="rotate(-90 48 48)"/><text x="48" y="54" text-anchor="middle" font-size="22" font-weight="900" fill="var(--ink)" font-family="Nunito">${score}</text></svg>`}
+function advice(sc,t){const r=sc/t;return r>=.88?["Ready to level up","You know this level well. The next days can be a little harder."]:r>=.64?["Stay at this level","This is just right. Understand your mistakes and continue tomorrow."]:["Go a little slower","This is a bit hard. Redo your mistakes and read the grammar lesson again. No rush."]}
+V.result=()=>{const R=S.res;const sc=R.filter(x=>x.ok).length;const t=R.length;const by={};R.forEach(x=>{const c=DAYS[x.d-1].quiz[x.i].c;by[c]=by[c]||[0,0];by[c][1]++;if(x.ok)by[c][0]++});
+const weak=Object.entries(by).sort((a,b)=>a[1][0]/a[1][1]-b[1][0]/b[1][1])[0];const ad=advice(sc,t);const wrong=R.filter(x=>!x.ok);
+return topbar(S.retry?"Mistakes: results":"Day "+S.day+" · Results","Your score",S.retry?"mistakes":"home")+`<div class="pad stack">
+<div class="card row" style="gap:16px">${ring(sc,t)}<div><b style="font-size:20px">${sc} / ${t}</b><p class="sm">${ad[0]}</p><p class="sm mute">${ad[1]}</p></div></div>
+<div class="card stack" style="gap:10px"><span class="sm mute">By type</span>${CATS.filter(c=>by[c]).map(c=>`<div><div class="row" style="justify-content:space-between"><span>${c}${weak&&weak[0]===c&&by[c][0]<by[c][1]?" · weakest":""}</span><b>${by[c][0]} / ${by[c][1]}</b></div><div class="bar"><i style="width:${by[c][0]/by[c][1]*100}%;${by[c][0]/by[c][1]<.7?"background:var(--sun)":""}"></i></div></div>`).join("")}</div>
+${wrong.length?`<h2>Your mistakes (${wrong.length})</h2>`:`<div class="card"><b>All correct!</b></div>`}
+${wrong.map(x=>{const q=DAYS[x.d-1].quiz[x.i];return `<div class="card stack" style="gap:8px"><span class="sm mute">${q.c}</span><b>${esc(q.q)}</b>
+<div class="row" style="flex-wrap:wrap"><span class="chip c">${IC.no} You chose: ${x.ch==null?"no answer":esc(q.o[x.ch])}</span><span class="chip t">${IC.ok} Answer: ${esc(q.o[q.a])}</span></div><p class="sm">${esc(q.y)}</p></div>`}).join("")}
+${S.retry?`<button class="btn pri" data-act="go" data-arg="mistakes">Back to Mistakes</button>`:`${wrong.length?`<button class="btn sec" data-act="retryNow">Redo these ${wrong.length} now</button>`:""}<button class="btn pri" data-act="go" data-arg="talk">Next: Speaking practice</button>`}
+<p class="note">Your mistakes are saved in Mistakes. You can practise them again later.</p></div>`};
+
+V.talk=()=>{const d=DAYS[S.day-1],T=d.talk;const i=S.ti||0;const q=T.qs[i];const fb=S.fb;
+return topbar("Day "+S.day+" · Speaking practice","Question "+(i+1)+" / "+T.qs.length,"home")+`<div class="pad stack">
+<p class="sm mute">You are talking to ${esc(T.role)}. Listen to the question, then answer out loud. Tip: main point → one detail → how you feel.</p>
+<div class="bubble" style="background:var(--teal-s)"><div class="row" style="justify-content:space-between"><span class="sm" style="color:var(--teal);font-weight:800">${esc(T.role)}</span><button class="iconbtn" style="background:var(--card)" data-act="sayQ" aria-label="Listen to the question">${IC.spk}</button></div><p class="big" style="font-size:19px">${esc(q.q)}</p></div>
+<div class="stack" style="align-items:center;gap:8px"><button id="micbtn" class="mic ${rec&&rec.on?"on":""}" data-act="micTalk" aria-label="Start recording">${IC.mic}</button><span id="live" class="sm mute" aria-live="polite"></span>${S.micMsg?`<p class="note" style="text-align:center">${esc(S.micMsg)}</p>`:""}</div>
+<label class="sm mute" for="ans">Your answer (it appears here after you speak; you can also type or edit)</label>
+<textarea id="ans" data-act="ansInput">${esc(S.talkText||"")}</textarea>
+${fb==="loading"?`<div class="card"><p>Claude is reading your answer...</p></div>`:fb&&fb.better?`<div class="card stack" style="gap:8px"><p>${esc(fb.praise||"")}</p><div class="bubble" style="background:var(--teal-s)"><span class="sm" style="color:var(--teal);font-weight:800">Better answer</span><p style="font-weight:700">${esc(fb.better)}</p></div>
+${fb.fix?`<p class="sm"><b>1 grammar point: </b>${esc(fb.fix)}</p>`:""}${fb.word?`<p class="sm"><b>1 useful word: </b>${esc(fb.word)}</p>`:""}<button class="btn sec" data-act="sayBetter">${IC.spk} Listen to the better answer</button></div>`:fb&&fb.err?`<div class="tip">${esc(fb.err)}</div>`:""}
+${S.showModel?`<div class="card"><span class="sm mute">Example answer</span><p style="font-weight:700">${esc(q.m)}</p></div>`:""}
+<div class="row"><button class="btn sec" data-act="talkModel">Example answer</button>${NS.sample?`<button class="btn teal" data-act="talkFb" ${(S.talkText||"").trim()?"":"disabled"}>Give me feedback</button>`:""}</div>
+<button class="btn pri" data-act="talkNext">${i+1<T.qs.length?"Next question":"Finish today!"}</button>
+<button class="btn" style="background:none;color:var(--mute);min-height:44px" data-act="tskip">I can't speak today, skip</button>
+</div>`};
+
+V.finish=()=>hero()+`<div class="pad stack" style="margin-top:18px"><h1>Day ${S.day} done!</h1><div class="card"><p>You finished all 5 parts today. Take a break and continue tomorrow.</p><p class="sm mute" style="margin-top:8px">${P.days[S.day]&&P.days[S.day].quiz?"25 questions: "+P.days[S.day].quiz.score+" / 25":""}</p></div><button class="btn pri" data-act="nav" data-arg="report">See my progress</button><button class="btn sec" data-act="nav" data-arg="home">Home</button></div>`;
+
+V.mistakes=()=>{const M=P.mistakes;return hero()+`<div class="pad stack" style="margin-top:18px"><h1>Mistakes</h1>
+<p class="mute">Questions you got wrong are saved here. When you get one right, it is removed.</p>
+${M.length?`<button class="btn pri" data-act="retryAll">Redo all ${M.length}</button>`+M.map(m=>{const q=DAYS[m.d-1].quiz[m.i];return `<div class="card stack" style="gap:6px"><div class="row"><span class="chip">Day ${m.d}</span><span class="chip ${q.c==="Grammar"?"t":q.c==="Spelling"?"s":"c"}">${q.c}</span></div><b>${esc(q.q)}</b><span class="sm mute">Answer: ${esc(q.o[q.a])} — ${esc(q.y)}</span></div>`}).join(""):`<div class="card"><p>No mistakes right now.</p></div>`}</div>`};
+
+V.road=()=>hero()+`<div class="pad stack" style="margin-top:18px"><h1>10-day plan</h1><p class="mute">Racing and daily life, one after the other. One grammar point each day, from your level now (about A2) step by step to B1.</p>
+${ROAD.map(r=>{const has=r[0]<=AVAIL;const ok=has&&dayDone(r[0]);return `<button class="step ${has?"":"lock"}" data-act="${has?"openDay":"noop"}" data-arg="${r[0]}"><span class="dot ${ok?"ok":has?"now":""}">${ok?IC.ok:has?r[0]:IC.lock}</span><span style="flex:1"><b>Day ${r[0]} · ${esc(r[3])}</b><br><span class="sm mute">${r[1]} · ${esc(r[2])}${has?"":" · coming after you finish the days before"}</span></span></button>`}).join("")}
+<p class="note">Day 3 onwards will be made from your Day 1–2 results, so the level is just right.</p></div>`;
+
+function stats(){
+  const qd=[];let qa=0,qc=0;const cat={};CATS.forEach(c=>cat[c]=[0,0]);
+  for(let n=1;n<=AVAIL;n++){const q=P.days[n]&&P.days[n].quiz;if(q){qd.push([n,q.score,q.total||25]);qa+=q.total||25;qc+=q.score;CATS.forEach(c=>{if(q.byCat&&q.byCat[c]){cat[c][0]+=q.byCat[c][0];cat[c][1]+=q.byCat[c][1]}})}}
+  const daysDone=ROAD.filter(r=>r[0]<=AVAIL&&dayDone(r[0])).length;
+  const words=DAYS.reduce((a,d)=>a+(P.days[d.n]&&P.days[d.n].vocab?d.vocab.length:0),0);
+  const sp=DAYS.map(d=>[d.n,P.days[d.n]&&P.days[d.n].speak]).filter(x=>x[1]&&x[1].best!=null);
+  const talks=DAYS.reduce((a,d)=>a+((P.days[d.n]&&P.days[d.n].talk)||0),0);
+  const lis=DAYS.map(d=>[d.n,P.days[d.n]&&P.days[d.n].listen]).filter(x=>x[1]!=null);
+  const pron=[];DAYS.forEach(d=>{const p=P.days[d.n]&&P.days[d.n].pron;if(p)pron.push(...p)});
+  const weak=CATS.filter(c=>cat[c][1]).sort((a,b)=>cat[a][0]/cat[a][1]-cat[b][0]/cat[b][1])[0];
+  const pronWords={};pron.forEach(w=>pronWords[w]=(pronWords[w]||0)+1);
+  const topPron=Object.entries(pronWords).sort((a,b)=>b[1]-a[1]).slice(0,5).map(x=>x[0]);
+  return {qd,qa,qc,cat,daysDone,words,sp,talks,lis,weak,topPron};
+}
+function level(st){if(!st.qd.length)return ["Not tested yet","Finish the 25 questions on Day 1 to see your level."];const last=st.qd[st.qd.length-1];const r=last[1]/last[2];
+  return r>=.88?["Strong A2, ready to move towards B1","The next days can be a little harder."]:r>=.64?["A2, improving","Stay at this level and practise your weakest type."]:["Early A2","Review your mistakes and the grammar lessons first. Build a strong base, then level up."]}
+V.report=()=>{const st=stats();const lv=level(st);
+return hero()+`<div class="pad stack" style="margin-top:18px"><h1>My progress</h1>
+<div class="card stack" style="gap:6px"><span class="sm mute">My level now</span><b style="font-size:20px">${lv[0]}</b><p class="sm mute">${lv[1]}</p></div>
+<div class="grid5" style="grid-template-columns:repeat(2,minmax(0,1fr))">
+${[["Days done",st.daysDone+" / 10"],["Streak",(P.streak.n||0)+" days"],["Words learned",String(st.words)],["Questions done",String(st.qa)],["Texts read aloud",String(st.sp.length)],["Spoken answers",String(st.talks)]].map(x=>`<div class="card" style="padding:14px"><div class="sm mute">${x[0]}</div><b style="font-size:22px">${x[1]}</b></div>`).join("")}</div>
+<div class="card stack" style="gap:10px"><span class="sm mute">Daily 25-question scores</span>${st.qd.length?st.qd.map(x=>`<div><div class="row" style="justify-content:space-between"><span>Day ${x[0]}</span><b>${x[1]} / ${x[2]}</b></div><div class="bar"><i style="width:${x[1]/x[2]*100}%;background:var(--coral)"></i></div></div>`).join(""):`<p class="sm mute">No scores yet.</p>`}</div>
+<div class="card stack" style="gap:10px"><span class="sm mute">4 question types (all days together)</span>${CATS.map(c=>{const v=st.cat[c];return v[1]?`<div><div class="row" style="justify-content:space-between"><span>${c}${st.weak===c?" · weakest":""}</span><b>${Math.round(v[0]/v[1]*100)}%</b></div><div class="bar"><i style="width:${v[0]/v[1]*100}%;${v[0]/v[1]<.7?"background:var(--sun)":""}"></i></div></div>`:`<div class="row" style="justify-content:space-between"><span>${c}</span><span class="sm mute">Not done yet</span></div>`}).join("")}</div>
+<div class="card stack" style="gap:6px"><span class="sm mute">Listening</span><p>${st.lis.length?st.lis.map(x=>"Day "+x[0]+": "+x[1]+" / 3").join(" · "):"Not done yet"}</p></div>
+<div class="card stack" style="gap:6px"><span class="sm mute">Read aloud (how clear)</span><p>${st.sp.length?st.sp.map(x=>"Day "+x[0]+": best "+x[1].best+"% ("+x[1].tries+" tries)").join("<br>"):"Not done yet"}</p></div>
+<div class="card stack" style="gap:6px"><span class="sm mute">Words that are often unclear</span><p>${st.topPron.length?esc(st.topPron.join(", ")):"Nothing yet"}</p></div>
+<div class="card stack" style="gap:6px"><span class="sm mute">What to do next</span><p>${esc(nextTip(st))}</p></div>
+<button class="btn pri" data-act="copyReport">Copy report (send to Dad or Claude)</button>
+${S.copied?`<p class="note" style="text-align:center">${esc(S.copied)}</p>`:""}
+${S.copied&&S.copyFail?`<textarea readonly>${esc(reportText())}</textarea>`:""}
+<div class="card stack"><b>Back up my progress</b><p class="sm mute">Before you change phones or clear Chrome data, tap Copy backup code and save it in WhatsApp or Notes. Later, paste it back and tap Restore.</p>
+<div class="row"><button class="btn sec" data-act="backup">Copy backup code</button><button class="btn sec" data-act="restoreOpen">Restore</button></div>
+${S.bk?`<p class="note">${esc(S.bk)}</p>`:""}${S.bkText?`<textarea readonly>${esc(S.bkText)}</textarea>`:""}
+${S.restoring?`<label class="sm mute" for="rs">Paste your backup code here</label><textarea id="rs"></textarea><button class="btn pri" data-act="restoreGo">Restore now</button>`:""}</div>
+</div>`};
+function nextTip(st){if(!st.qd.length)return "Start with Day 1. Finish all 5 parts each day.";
+  const t=[];if(st.weak&&st.cat[st.weak][0]/st.cat[st.weak][1]<.8)t.push("Your weakest type is "+st.weak+". Go to Mistakes and redo these questions first.");
+  if(P.mistakes.length)t.push("You have "+P.mistakes.length+" questions in Mistakes.");
+  if(st.topPron.length)t.push("When you read aloud, be careful with: "+st.topPron.slice(0,3).join(", ")+".");
+  if(!t.length)t.push("Everything looks strong. Keep practising every day!");return t.join(" ")}
+function reportText(){const st=stats();const lv=level(st);
+  return ["[Pit Lane English progress report] "+today(),"Level: "+lv[0],"Days done: "+st.daysDone+"/10 · Streak: "+(P.streak.n||0)+" days",
+  "Daily scores: "+(st.qd.map(x=>"Day "+x[0]+" "+x[1]+"/"+x[2]).join(", ")||"none"),
+  "By type: "+CATS.map(c=>c+" "+(st.cat[c][1]?Math.round(st.cat[c][0]/st.cat[c][1]*100)+"%":"—")).join(", "),
+  "Listening: "+(st.lis.map(x=>"Day "+x[0]+" "+x[1]+"/3").join(", ")||"none"),
+  "Words: "+st.words+" · Read aloud: "+(st.sp.map(x=>"Day "+x[0]+" best "+x[1].best+"%").join(", ")||"none")+" · Spoken answers: "+st.talks,
+  "Often unclear words: "+(st.topPron.join(", ")||"none"),"Mistakes: "+P.mistakes.length,"Next: "+nextTip(st)].join("\n")}
+
+/* ---------- RENDER + ACTIONS ---------- */
+const app=document.getElementById("app");
+function render(){app.innerHTML=(V[S.view]||V.home)();updMic()}
+function openDay(n){S.day=n}
+const A={
+  nav:a=>{S.copied="";go(a)},
+  go:a=>{if(a==="day")a="home";if(a==="speak"){S.sres=null}if(a==="talk"){S.ti=0;S.fb=null;S.talkText="";S.showModel=false}go(a)},
+  noop:()=>{},
+  openDay:a=>{S.day=+a;S.lr={};S.lChecked=false;S.showTxt=false;go("vocab")},
+  step:a=>{S.day=curDay();if(a==="listen"){S.lr={};S.lChecked=false;S.showTxt=false}A.go(a==="quiz"?"lesson":a)},
+  say:a=>{const v=DAYS[S.day-1].vocab[+a.slice(1)];speak([{text:v.w},{text:v.e}],.9)},
+  vocabDone:()=>{D(S.day).vocab=true;touch("vocab");S.lr={};S.lChecked=false;S.showTxt=false;go("listen")},
+  playDialog:()=>{if(S.playing){stopAudio();updPlay();hl(-1);return}const L=DAYS[S.day-1].listen.lines;speak(L.map(l=>({text:l[1],voice:l[0]==="RM"?"rounded":"airy"})),S.rate||.9)},
+  rate:a=>{S.rate=+a;stopAudio();render()},
+  toggleTxt:()=>{S.showTxt=!S.showTxt;render()},
+  lpick:a=>{const [q,o]=a.split("-").map(Number);S.lr=S.lr||{};S.lr[q]=o;render()},
+  lcheck:()=>{S.lChecked=true;const L=DAYS[S.day-1].listen;D(S.day).listen=L.qs.filter((q,i)=>S.lr[i]===q.a).length;touch("listen");render()},
+  playSpeak:()=>{if(S.playing){stopAudio();updPlay();hl(-1);return}const K=DAYS[S.day-1].speak;speak(K.parts.map(p=>({text:p[1],voice:p[0]==="RM"?"rounded":"airy"})),S.rate||.9)},
+  saySent:a=>{const x=S.sres&&S.sres.weak[+a];if(x)speak(x.text,.85)},
+  micSpeak:()=>{stopAudio();micToggle(t=>{S.sres=speakAnalyse(t);const d=D(S.day);d.speak={best:Math.max((d.speak&&d.speak.best)||0,S.sres.score),last:S.sres.score,tries:((d.speak&&d.speak.tries)||0)+1};d.pron=(d.pron||[]).concat(S.sres.bad).slice(-80);touch("speak");render()})},
+  speakDone:()=>{go("lesson")},
+  speakSkip:()=>{D(S.day).speakSkip=true;touch();go("lesson")},
+  startQuiz:()=>{D(S.day).grammar=true;S.retry=false;S.qset=DAYS[S.day-1].quiz.map((q,i)=>({d:S.day,i}));S.qi=0;S.ans={};S.qWarn=false;go("quiz")},
+  qpick:a=>{const it=S.qset[S.qi];S.ans[it.d+"-"+it.i]=+a;S.qWarn=false;render()},
+  qprev:()=>{S.qi=Math.max(0,S.qi-1);render()},qnext:()=>{S.qi=Math.min(S.qset.length-1,S.qi+1);render();window.scrollTo(0,0)},
+  qjump:a=>{S.qi=+a;render();window.scrollTo(0,0)},
+  qsubmit:()=>{const un=S.qset.filter(x=>S.ans[x.d+"-"+x.i]==null).length;if(un&&!S.qWarn){S.qWarn=true;render();return}
+    const R=S.qset.map(x=>{const q=DAYS[x.d-1].quiz[x.i];const ch=S.ans[x.d+"-"+x.i];return {d:x.d,i:x.i,ch,ok:ch===q.a}});
+    R.forEach(x=>{const k=P.mistakes.findIndex(m=>m.d===x.d&&m.i===x.i);if(x.ok&&k>=0)P.mistakes.splice(k,1);if(!x.ok&&k<0)P.mistakes.push({d:x.d,i:x.i})});
+    if(!S.retry){const by={};R.forEach(x=>{const c=DAYS[x.d-1].quiz[x.i].c;by[c]=by[c]||[0,0];by[c][1]++;if(x.ok)by[c][0]++});const sc=R.filter(x=>x.ok).length;
+      D(S.day).quiz={score:sc,total:R.length,byCat:by,wrong:R.filter(x=>!x.ok).map(x=>x.i),at:Date.now(),advice:advice(sc,R.length)[0]}}
+    touch(S.retry?"retry":"quiz");S.res=R;S.qWarn=false;go("result")},
+  retryNow:()=>{const W=S.res.filter(x=>!x.ok);S.retry=true;S.qset=W.map(x=>({d:x.d,i:x.i}));S.qi=0;S.ans={};go("quiz")},
+  retryAll:()=>{S.retry=true;S.qset=P.mistakes.map(m=>({d:m.d,i:m.i}));S.qi=0;S.ans={};go("quiz")},
+  sayQ:()=>speak(DAYS[S.day-1].talk.qs[S.ti||0].q,.9),
+  sayBetter:()=>{if(S.fb&&S.fb.better)speak(S.fb.better,.9)},
+  micTalk:()=>{stopAudio();micToggle(t=>{if(t)S.talkText=((S.talkText||"")+" "+t).trim();render()})},
+  talkModel:()=>{S.showModel=!S.showModel;render()},
+  talkFb:async()=>{const T=DAYS[S.day-1].talk;const q=T.qs[S.ti||0];const ans=(S.talkText||"").trim();if(!ans)return;
+    if(!NS.sample){S.fb={err:"Claude feedback is not available right now. Look at the example answer and compare."};S.showModel=true;render();return}
+    S.fb="loading";render();
+    const prompt="You are a warm English coach for RM, a 15-year-old Malaysian kart racer. Her level is about CEFR A2 and she wants to reach B1. Context: she is talking to "+T.role+". Question: \""+q.q+"\". Her answer (from speech-to-text, so ignore small recognition errors and do not comment on punctuation): \""+ans+"\". Reply ONLY with JSON: {\"praise\":\"one short warm sentence in very simple English (A2) about what she did well\",\"better\":\"her answer improved in English, keep her own ideas, simple A2-B1 words, at most 3 short sentences\",\"fix\":\"the ONE most important grammar or word mistake, in very simple English (A2), with a wrong → right example; empty string if none\",\"word\":\"one useful English word or phrase for this topic with a very simple English meaning\"}";
+    try{const r=await NS.sample.json(prompt,{modelTier:"quick"});S.fb=(r&&r.better)?r:{err:"No feedback came back. Please tap again."}}catch(e){S.fb={err:e&&e.code==="rate_limited"?"Too fast. Wait a moment, then tap again.":"No feedback came back. Look at the example answer first."}}
+    const d=D(S.day);d.talkLog=(d.talkLog||[]).concat([{q:S.ti||0,a:ans}]).slice(-20);save();render()},
+  talkNext:()=>{const T=DAYS[S.day-1].talk;const d=D(S.day);if((S.talkText||"").trim())d.talk=Math.max(d.talk||0,(S.ti||0)+1);else d.talk=Math.max(d.talk||0,(S.ti||0)+1);touch("talk");
+    if((S.ti||0)+1<T.qs.length){S.ti=(S.ti||0)+1;S.fb=null;S.talkText="";S.showModel=false;render();window.scrollTo(0,0)}else go("finish")},
+  tskip:()=>{D(S.day).talkSkip=true;touch();go("finish")},
+  backup:()=>{const t="PLE1:"+btoa(unescape(encodeURIComponent(JSON.stringify(P))));S.bkText="";try{navigator.clipboard.writeText(t).then(()=>{S.bk="Backup code copied. Paste it somewhere safe.";render()}).catch(()=>{S.bk="Could not copy. Press and hold the text below to copy it.";S.bkText=t;render()})}catch(e){S.bk="Could not copy. Press and hold the text below to copy it.";S.bkText=t;render()}},
+  restoreOpen:()=>{S.restoring=!S.restoring;render()},
+  restoreGo:()=>{const el=document.getElementById("rs");try{const t=el.value.trim().replace(/^PLE1:/,"");const v=JSON.parse(decodeURIComponent(escape(atob(t))));if(!v||!v.days)throw 0;P=Object.assign(blank(),v);save();S.restoring=false;S.bk="Restored!";render()}catch(e){S.bk="This backup code is not right. Please paste it again.";render()}},
+  copyReport:()=>{const t=reportText();try{navigator.clipboard.writeText(t).then(()=>{S.copied="Copied. Paste it in WhatsApp or a Claude chat.";S.copyFail=false;render()}).catch(()=>{S.copied="Could not copy. Press and hold the text below to copy it.";S.copyFail=true;render()})}catch(e){S.copied="Could not copy. Press and hold the text below to copy it.";S.copyFail=true;render()}}
+};
+app.addEventListener("click",e=>{const b=e.target.closest("[data-act]");if(!b||b.tagName==="TEXTAREA")return;const f=A[b.dataset.act];if(f)f(b.dataset.arg,b)});
+app.addEventListener("input",e=>{if(e.target.id==="ans"){S.talkText=e.target.value;const b=app.querySelector('[data-act="talkFb"]');if(b)b.disabled=!S.talkText.trim()}});
+S.day=curDay();render();
+
+/* ---------- CAPABILITIES ---------- */
+const C=window.claude&&window.claude.use?window.claude:null;
+if(C){
+  C.use("tts").then(t=>{NS.tts=t;if(t){t.onLine(({id})=>{if(id)hl(+String(id).slice(1))});t.onState(({state})=>{S.playing=state==="speaking"||state==="paused";updPlay();if(state==="idle")hl(-1)})}}).catch(()=>{});
+  C.use("dictation").then(d=>{NS.dict=d;NS.dictChecked=true;if(d){d.onPartial(({text})=>{if(rec&&rec.on){rec.partial=text;updMic()}});d.onFinal(({text})=>{if(rec&&rec.on){rec.final=(rec.final+" "+text).trim();rec.partial="";updMic()}});d.onState(({state})=>{if(state==="idle"&&rec&&rec.on)finishRec(rec)})}if(S.view==="home")render()}).catch(()=>{NS.dictChecked=true});
+  C.use("sample").then(s=>{NS.sample=s}).catch(()=>{});
+  C.use("db").then(async db=>{NS.db=db;if(!db)return;try{const r=await db.doc("progress/main").get();let v=r;if(r&&typeof r.data==="function")v=r.data();else if(r&&r.data!==undefined&&r.exists!==undefined)v=r.data;if(r&&r.exists===false)v=null;
+    if(v&&v.updatedAt&&v.updatedAt>P.updatedAt){P=Object.assign(blank(),v);migrate();try{localStorage.setItem(KEY,JSON.stringify(P))}catch(e){}S.day=curDay();render()}else if(P.updatedAt){save()}}catch(e){}}).catch(()=>{});
+}else{NS.dictChecked=true;render()}
+}
+</script>
+</body>
+</html>
